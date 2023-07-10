@@ -1,6 +1,7 @@
 package com.spring.backend.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,11 @@ public class CategoryService {
 		List<Category> list = categoryRepository.findAll();
 		
 		return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
+	}
+	
+	public CategoryDTO findById(Long id) {
+		Optional<Category> obj = categoryRepository.findById(id);
+		
+		return new CategoryDTO(obj.get());
 	}
 }
