@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.spring.backend.dto.CategoryDTO;
 import com.spring.backend.entities.Category;
 import com.spring.backend.repositories.CategoryRepository;
+import com.spring.backend.services.exceptions.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -25,7 +26,8 @@ public class CategoryService {
 	
 	public CategoryDTO findById(Long id) {
 		Optional<Category> obj = categoryRepository.findById(id);
+		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Category Not Found!!!"));
 		
-		return new CategoryDTO(obj.get());
+		return new CategoryDTO(entity);
 	}
 }
