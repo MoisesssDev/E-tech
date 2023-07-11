@@ -1,15 +1,18 @@
 package com.spring.backend.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.spring.backend.dto.CategoryDTO;
 import com.spring.backend.entities.Category;
 import com.spring.backend.repositories.CategoryRepository;
+import com.spring.backend.services.exceptions.DataBaseException;
 import com.spring.backend.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -50,8 +53,23 @@ public class CategoryService {
 			
 			return new CategoryDTO(entity);
 			
-		} catch (EntityNotFoundException e) {
+		} 
+		catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Category Not Found!");
 		}
+	}
+
+	public void delete(Long id) {
+		try {
+			categoryRepository.delete(categoryRepository.findById(id).get());
+			//categoryRepository.deleteById(id);
+		} 
+		catch (NoSuchElementException e) {
+			throw new ResourceNotFoundException("Category Not Found!");
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new DataBaseException("Product linked category");
+		}
+		
 	}
 }
