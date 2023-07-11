@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.spring.backend.dto.CategoryDTO;
 import com.spring.backend.entities.Category;
 import com.spring.backend.repositories.CategoryRepository;
-import com.spring.backend.services.exceptions.EntityNotFoundException;
+import com.spring.backend.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -26,7 +28,7 @@ public class CategoryService {
 	
 	public CategoryDTO findById(Long id) {
 		Optional<Category> obj = categoryRepository.findById(id);
-		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Category Not Found!!!"));
+		Category entity = obj.orElseThrow(() -> new ResourceNotFoundException("Category Not Found!!!"));
 		
 		return new CategoryDTO(entity);
 	}
@@ -37,5 +39,19 @@ public class CategoryService {
 		entity = categoryRepository.save(entity);
 		
 		return new CategoryDTO(entity);
+	}
+
+	public CategoryDTO update(Long id,CategoryDTO dto) {
+		try {
+			Category entity = categoryRepository.findById(id).get();
+			
+			entity.setName(dto.getName());
+			entity = categoryRepository.save(entity);
+			
+			return new CategoryDTO(entity);
+			
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Category Not Found!");
+		}
 	}
 }
