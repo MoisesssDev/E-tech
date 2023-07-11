@@ -1,12 +1,12 @@
 package com.spring.backend.services;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.spring.backend.dto.CategoryDTO;
@@ -23,10 +23,10 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-	public List<CategoryDTO> findAll(){
-		List<Category> list = categoryRepository.findAll();
+	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest){
+		Page<Category> pages = categoryRepository.findAll(pageRequest);
 		
-		return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
+		return pages.map(x -> new CategoryDTO(x));
 	}
 	
 	public CategoryDTO findById(Long id) {
@@ -72,4 +72,5 @@ public class CategoryService {
 		}
 		
 	}
+
 }
