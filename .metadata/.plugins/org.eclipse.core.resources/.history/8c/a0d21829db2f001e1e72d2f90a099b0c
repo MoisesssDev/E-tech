@@ -1,0 +1,25 @@
+package com.spring.backend.dto;
+
+import com.spring.backend.entities.Role;
+
+public class RoleDTO {
+	private Long id;
+	private String authority;
+	
+	public RoleDTO() {
+	}
+
+	public RoleDTO(Long id, String authority) {
+		super();
+		this.id = id;
+		this.authority = authority;
+	}
+
+	public RoleDTO(Role entity) {
+		super();
+		this.id = entity.getId();
+		this.authority = entity.getAuthority();
+	}
+	
+	
+}
