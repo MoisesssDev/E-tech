@@ -2,13 +2,16 @@ package com.spring.backend.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +29,9 @@ public class Category implements Serializable{
 	
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant updatedAt;
+	
+	@ManyToMany(mappedBy = "categories")
+	Set<Product> products = new HashSet<>();
 
 	public Category() {
 	}
@@ -65,6 +71,10 @@ public class Category implements Serializable{
 
 	public void setUpdatedAt(Instant updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+	
+	public Set<Product> getProducts() {
+		return products;
 	}
 
 	@Override
