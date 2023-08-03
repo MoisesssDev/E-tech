@@ -6,14 +6,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.spring.backend.dto.RoleDTO;
 import com.spring.backend.dto.UserDTO;
+import com.spring.backend.dto.UserInsertDTO;
 import com.spring.backend.entities.Role;
 import com.spring.backend.entities.User;
-import com.spring.backend.repositories.CategoryRepository;
 import com.spring.backend.repositories.RoleRepository;
 import com.spring.backend.repositories.UserRepository;
 import com.spring.backend.services.exceptions.DataBaseException;
@@ -30,9 +31,12 @@ public class UserService {
 	@Autowired
 	private RoleRepository roleRepository;
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 
-	public Page<UserDTO> findAllPaged(PageRequest pageRequest) {
-		Page<User> pages = UserRepository.findAll(pageRequest);
+	public Page<UserDTO> findAllPaged(Pageable pageable) {
+		Page<User> pages = UserRepository.findAll(pageable);
 
 		return pages.map(x -> new UserDTO(x));
 	}
@@ -44,9 +48,10 @@ public class UserService {
 		return new UserDTO(entity);
 	}
 
-	public UserDTO save(UserDTO dto) {
+	public UserDTO save(UserInsertDTO dto) {
 		User entity = new User();
 		copyDtoToEntity(dto, entity);
+		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		entity = UserRepository.save(entity);
 
 		return new UserDTO(entity);
