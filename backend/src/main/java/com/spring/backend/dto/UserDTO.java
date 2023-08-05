@@ -6,14 +6,23 @@ import java.util.Set;
 
 import com.spring.backend.entities.User;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class UserDTO implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	
+	@NotBlank(message = "Required field. *")
 	private String firstName;
+	
+	@NotBlank(message = "Required field. *")
 	private String lastName;
+	
+	@Email(message = "Enter a valid e-mail address. *")
 	private String email;
 	
 	private Set<RoleDTO> roles = new HashSet<>();

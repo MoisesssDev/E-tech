@@ -22,6 +22,7 @@ import com.spring.backend.dto.ProductDTO;
 import com.spring.backend.services.ProductService;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
@@ -55,7 +56,7 @@ public class ProductResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProductDTO> save(@RequestBody ProductDTO dto) {
+	public ResponseEntity<ProductDTO> save(@Valid @RequestBody ProductDTO dto) {
 		dto = productService.save(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 
@@ -64,14 +65,14 @@ public class ProductResource {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dto) {
+	public ResponseEntity<ProductDTO> update(@Valid @PathVariable Long id, @RequestBody ProductDTO dto) {
 		dto = productService.update(id, dto);
 
 		return ResponseEntity.ok().body(dto);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> update(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		productService.delete(id);
 
 		return ResponseEntity.noContent().build();

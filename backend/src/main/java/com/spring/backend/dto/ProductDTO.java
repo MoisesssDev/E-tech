@@ -9,13 +9,25 @@ import java.util.Set;
 import com.spring.backend.entities.Category;
 import com.spring.backend.entities.Product;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+
 public class ProductDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	
+	@NotBlank(message = "Required field")
 	private String name;
+	
+	@NotBlank(message = "Required field")
 	private String description;
+	
+	@Positive(message = "Price invalid. Value needs to be positive. *")
 	private Double price;
 	private String imgUrl;
+	
+	@PastOrPresent(message = "Date invalid. *")
 	private Instant date;
 	
 	private List<CategoryDTO> categories = new ArrayList<>();

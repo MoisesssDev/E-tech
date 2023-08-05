@@ -23,6 +23,7 @@ import com.spring.backend.dto.UserInsertDTO;
 import com.spring.backend.services.UserService;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -56,7 +57,7 @@ public class UserResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<UserDTO> save(@RequestBody UserInsertDTO dto) {
+	public ResponseEntity<UserDTO> save(@Valid @RequestBody UserInsertDTO dto) {
 		UserDTO newDto = userService.save(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newDto.getId()).toUri();
 
@@ -65,14 +66,14 @@ public class UserResource {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO dto) {
+	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
 		dto = userService.update(id, dto);
 
 		return ResponseEntity.ok().body(dto);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> update(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		userService.delete(id);
 
 		return ResponseEntity.noContent().build();
