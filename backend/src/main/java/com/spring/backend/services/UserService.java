@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.spring.backend.dto.RoleDTO;
 import com.spring.backend.dto.UserDTO;
 import com.spring.backend.dto.UserInsertDTO;
+import com.spring.backend.dto.UserUpdateDTO;
 import com.spring.backend.entities.Role;
 import com.spring.backend.entities.User;
 import com.spring.backend.repositories.RoleRepository;
@@ -26,23 +27,22 @@ import jakarta.persistence.EntityNotFoundException;
 public class UserService {
 
 	@Autowired
-	private UserRepository UserRepository;
-	
+	private UserRepository userRepository;
+
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	
 
 	public Page<UserDTO> findAllPaged(Pageable pageable) {
-		Page<User> pages = UserRepository.findAll(pageable);
+		Page<User> pages = userRepository.findAll(pageable);
 
 		return pages.map(x -> new UserDTO(x));
 	}
 
 	public UserDTO findById(Long id) {
-		Optional<User> obj = UserRepository.findById(id);
+		Optional<User> obj = userRepository.findById(id);
 		User entity = obj.orElseThrow(() -> new ResourceNotFoundException("User Not Found!!!"));
 
 		return new UserDTO(entity);
@@ -52,17 +52,18 @@ public class UserService {
 		User entity = new User();
 		copyDtoToEntity(dto, entity);
 		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
-		entity = UserRepository.save(entity);
 
+		entity = userRepository.save(entity);
 		return new UserDTO(entity);
+
 	}
 
-	public UserDTO update(Long id, UserDTO dto) {
+	public UserDTO update(Long id, UserUpdateDTO dto) {
 		try {
-			User entity = UserRepository.findById(id).get();
-
+			User entity = userRepository.findById(id).get();
 			copyDtoToEntity(dto, entity);
-			entity = UserRepository.save(entity);
+
+			entity = userRepository.save(entity);
 
 			return new UserDTO(entity);
 
@@ -73,7 +74,7 @@ public class UserService {
 
 	public void delete(Long id) {
 		try {
-			UserRepository.delete(UserRepository.findById(id).get());
+			userRepository.delete(userRepository.findById(id).get());
 			// UserRepository.deleteById(id);
 		} catch (NoSuchElementException e) {
 			throw new ResourceNotFoundException("User Not Found!");
@@ -84,16 +85,16 @@ public class UserService {
 	}
 
 	private void copyDtoToEntity(UserDTO dto, User entity) {
-		
+
 		entity.setFirstName(dto.getFirstName());
 		entity.setLastName(dto.getLastName());
 		entity.setEmail(dto.getEmail());
-		
+
 		entity.getRoles().clear();
 		for (RoleDTO roleDto : dto.getRoles()) {
 			Role role = roleRepository.findById(roleDto.getId()).get();
 			entity.getRoles().add(role);
 		}
 	}
-	
+
 }

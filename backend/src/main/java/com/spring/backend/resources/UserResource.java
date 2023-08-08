@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.spring.backend.dto.UserDTO;
 import com.spring.backend.dto.UserInsertDTO;
+import com.spring.backend.dto.UserUpdateDTO;
 import com.spring.backend.services.UserService;
 
 import jakarta.transaction.Transactional;
@@ -66,10 +67,10 @@ public class UserResource {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
-		dto = userService.update(id, dto);
+	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
+		UserDTO newDto = userService.update(id, dto);
 
-		return ResponseEntity.ok().body(dto);
+		return ResponseEntity.ok().body(newDto);
 	}
 
 	@DeleteMapping("/{id}")
