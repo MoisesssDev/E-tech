@@ -47,7 +47,7 @@ public class ProductService {
 		copyDtoToEntity(dto, entity);
 		entity = ProductRepository.save(entity);
 
-		return new ProductDTO(entity);
+		return new ProductDTO(entity, entity.getCategories());
 	}
 
 	public ProductDTO update(Long id, ProductDTO dto) {
@@ -57,7 +57,7 @@ public class ProductService {
 			copyDtoToEntity(dto, entity);
 			entity = ProductRepository.save(entity);
 
-			return new ProductDTO(entity);
+			return new ProductDTO(entity, entity.getCategories());
 
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Product Not Found!");

@@ -6,6 +6,7 @@
 		<item key="wholeword" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="UserRepository"/>
 			<item value="product"/>
 			<item value="Product"/>
 			<item value="category"/>
