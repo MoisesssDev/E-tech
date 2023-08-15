@@ -1,5 +1,0 @@
-package com.spring.backend.services.validation;
-
-public class UserInsertValidator {
-
-}
